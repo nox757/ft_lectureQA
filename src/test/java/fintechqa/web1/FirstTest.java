@@ -1,4 +1,4 @@
-package fintexhqa.web1;
+package fintechqa.web1;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -44,6 +44,7 @@ public class FirstTest extends BaseRunner {
         assertEquals("Код города/оператора должен начинаться с цифры 3, 4, 5, 6, 8, 9", driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Номер телефона'])[1]/following::div[3]")).getText());
         assertEquals("Допустимо использовать только буквы русского, латинского алфавита и дефис", driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Город'])[1]/following::div[3]")).getText());
         driver.findElement(By.name("phone")).click();
+        driver.findElement(By.name("phone")).clear();
         driver.findElement(By.name("phone")).sendKeys(Keys.chord(Keys.CONTROL,"a", Keys.DELETE));
         driver.findElement(By.name("phone")).sendKeys("+7 (989) ");
         driver.findElement(By.name("fio")).click();
