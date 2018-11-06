@@ -1,21 +1,18 @@
 package fintechqa.web1;
 
+import fintechqa.web1.elements.Select;
 import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.regex.Matcher;
 
 import static org.junit.Assert.*;
-import static org.junit.matchers.JUnitMatchers.either;
 
 public class SecondTest extends BaseRunner {
 
@@ -94,20 +91,20 @@ public class SecondTest extends BaseRunner {
         wait.until(ExpectedConditions.textToBePresentInElementLocated(selectedRegionLocator, "Краснодар"));
         wait.until(ExpectedConditions.visibilityOfElementLocated(amountTextLocator));
         String amountKrasnodar = driver.findElement(amountTextLocator).getAttribute("innerText");
-        assertNotEquals(amountKrasnodar, amountMoscow);// TODO: нужны ожидания, ложные срабатывания из-за быстрого чтения до смены атрибута
+        assertNotEquals(amountKrasnodar, amountMoscow);
 
+        Select internetSelect = new Select(driver.findElement(By.xpath("//*[@data-qa-file='UIDropdownSelect' and .//*[@name='internet']]")));
+        Select callsSelect = new Select(driver.findElement(By.xpath("//*[@data-qa-file='UIDropdownSelect' and .//*[@name='calls']]")));
+        internetSelect.selectValue("Безлимитный интернет");
+        callsSelect.selectValue("Безлимитные минуты");
 
-        //TODO: работа со списком, и проверки
-//        By dropDownInternetLocator = By.xpath("//*[@name='internet']");
-//        driver.findElement(By.xpath("//*[@data-qa-file=\"UIDropdownSelect\" and .//*[@name='internet']]")).click();
-//        Select internet = new Select(driver.findElement(dropDownInternetLocator));
-//
-//        internet.selectByIndex(5);
-//        try {
-//            Thread.sleep(7000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+        System.out.println(driver.findElement(By.xpath("//*[@data-qa-file=\"UICheckbox\"]//input[@type='checkbox']")).isSelected());
+
+        try {
+            Thread.sleep(7000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
