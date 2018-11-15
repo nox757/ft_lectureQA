@@ -7,9 +7,9 @@ import java.io.IOException;
 
 public class CheckBox extends BaseElement {
 
-    private final static By TEXT_LOCATOR = By.xpath("//label//*[contains(@class, 'description')]");
-    private final static By CLICK_LOCATOR = By.xpath("");
-    private final static By INPUT_LOCATOR = By.xpath("//input[@type='checkbox']");
+    private final static By TEXT_LOCATOR = By.xpath(".//label//*[contains(@class, '__text')]");
+    private final static By CLICK_LOCATOR = By.xpath(".//label//*[contains(@class, '__check')]");
+    private final static By INPUT_LOCATOR = By.xpath(".//input[@type='checkbox']");
 
     public CheckBox(WebElement element) {
         super(element);
@@ -23,10 +23,16 @@ public class CheckBox extends BaseElement {
         return element.findElement(TEXT_LOCATOR).getText();
     }
 
+    public void setValue(boolean state) throws IOException {
+        if (state != isSelected()) {
+            click();
+        }
+    }
+
     public void click() throws IOException {
         boolean StateBeforeClick = isSelected();
         element.findElement(CLICK_LOCATOR).click();
-        if(StateBeforeClick == isSelected()) {
+        if (StateBeforeClick == isSelected()) {
             throw new IOException("No change State of CheckBox");
         }
     }

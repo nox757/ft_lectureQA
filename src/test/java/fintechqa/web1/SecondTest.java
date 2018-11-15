@@ -1,5 +1,7 @@
 package fintechqa.web1;
 
+import fintechqa.web1.elements.CheckBox;
+import fintechqa.web1.elements.EnumElements;
 import fintechqa.web1.elements.Select;
 import org.hamcrest.CoreMatchers;
 import org.junit.Test;
@@ -10,6 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -92,13 +95,21 @@ public class SecondTest extends BaseRunner {
         wait.until(ExpectedConditions.visibilityOfElementLocated(amountTextLocator));
         String amountKrasnodar = driver.findElement(amountTextLocator).getAttribute("innerText");
         assertNotEquals(amountKrasnodar, amountMoscow);
+        ElementCreator elementCreator = new ElementCreator(driver);
 
-        Select internetSelect = new Select(driver.findElement(By.xpath("//*[@data-qa-file='UIDropdownSelect' and .//*[@name='internet']]")));
-        Select callsSelect = new Select(driver.findElement(By.xpath("//*[@data-qa-file='UIDropdownSelect' and .//*[@name='calls']]")));
+        Select internetSelect = elementCreator.create(EnumElements.SELECT,
+                By.xpath("//*[@data-qa-file='UIDropdownSelect' and .//*[@name='internet']]"));
+        Select callsSelect = elementCreator.create(EnumElements.SELECT,
+                By.xpath("//*[@data-qa-file='UIDropdownSelect' and .//*[@name='calls']]"));
+
         internetSelect.selectValue("Безлимитный интернет");
         callsSelect.selectValue("Безлимитные минуты");
 
         System.out.println(driver.findElement(By.xpath("//*[@data-qa-file=\"UICheckbox\"]//input[@type='checkbox']")).isSelected());
+
+       CheckBox checkBox =  elementCreator.create(EnumElements.CHECKBOX,
+               By.xpath("//*[@data-qa-file='UICheckbox']//input[@type='checkbox']"));
+
 
         try {
             Thread.sleep(7000);

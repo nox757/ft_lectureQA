@@ -7,9 +7,9 @@ import java.util.List;
 
 public class Select extends BaseElement {
 
-    private final static By OPTION_LOCATOR = By.xpath("//*[@data-qa-file='UIDropdownSelectItemComponent']");
+    private final static By OPTION_LOCATOR = By.xpath(".//*[@data-qa-file='UIDropdownSelectItemComponent' and contains(@class, '-text')]");
 
-    private final static By SELECTED_LOCATOR = By.xpath("//*[@data-qa-file='UISelectTitle' and contains(@class, '-text')]");
+    private final static By SELECTED_LOCATOR = By.xpath(".//*[@data-qa-file='UISelectTitle' and contains(@class, '-text')]");
 
     public Select(WebElement element) {
         super(element);
