@@ -1,10 +1,13 @@
 package fintechqa.web1;
 
+import fintechqa.web1.actions.ActionHelper;
+import fintechqa.web1.actions.ActionHelperImpl;
 import fintechqa.web1.elements.BaseElement;
 import fintechqa.web1.elements.EnumElements;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -14,19 +17,21 @@ import java.util.List;
 public class ElementCreator {
 
     private WebDriver driver;
+    private ActionHelper actionHelper;
 
     public ElementCreator(WebDriver driver) {
         this.driver = driver;
+        actionHelper = new ActionHelperImpl(new WebDriverWait(driver, 15));
     }
 
-    @SuppressWarnings("unchecked")
     public <T extends BaseElement> T create(EnumElements typeElement, By xpath) {
         WebElement element = getElement(xpath);
         return initElement(element, typeElement);
     }
 
-    private WebElement getElement(By xpath) {
-        return driver.findElement(xpath);
+    public <T extends BaseElement> T create(EnumElements typeElement, String innerText) {
+        WebElement element = getElement(By.xpath(typeElement.getBaseXpath() + String.format("[.//*[contains(text(),'%s')]]", innerText)));
+        return initElement(element, typeElement);
     }
 
     public <T extends BaseElement> List<T> createList(EnumElements typeElement, By xpath) {
@@ -41,6 +46,10 @@ public class ElementCreator {
         return result;
     }
 
+    private WebElement getElement(By xpath) {
+        return driver.findElement(xpath);
+    }
+
     private List<WebElement> getElements(By xpath) {
         return driver.findElements(xpath);
     }
@@ -49,8 +58,8 @@ public class ElementCreator {
     private <T extends BaseElement> T initElement(WebElement element, EnumElements typeElement) {
         try {
             Class<?> clazz = Class.forName(typeElement.getClassName());
-            Constructor<?> constructor = clazz.getConstructor(WebElement.class);
-            return (T) constructor.newInstance(element);
+            Constructor<?> constructor = clazz.getConstructor(WebElement.class, ActionHelper.class);
+            return (T) constructor.newInstance(element, actionHelper);
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
         }

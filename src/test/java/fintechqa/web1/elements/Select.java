@@ -1,5 +1,6 @@
 package fintechqa.web1.elements;
 
+import fintechqa.web1.actions.ActionHelper;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -7,12 +8,20 @@ import java.util.List;
 
 public class Select extends BaseElement {
 
-    private final static By OPTION_LOCATOR = By.xpath(".//*[@data-qa-file='UIDropdownSelectItemComponent' and contains(@class, '-text')]");
+    private final By OPTION_LOCATOR;
 
-    private final static By SELECTED_LOCATOR = By.xpath(".//*[@data-qa-file='UISelectTitle' and contains(@class, '-text')]");
+    private final By SELECTED_LOCATOR;
 
-    public Select(WebElement element) {
-        super(element);
+    public Select(WebElement element, ActionHelper actionHelper) {
+        this(element, actionHelper,
+                By.xpath(".//*[@data-qa-file='UIDropdownSelectItemComponent' and contains(@class, '-text')]"),
+                By.xpath(".//*[@data-qa-file='UISelectTitle' and contains(@class, '-text')]"));
+    }
+
+    public Select(WebElement element, ActionHelper actionHelper, By optionLocator, By selectedLocator) {
+        super(element, actionHelper);
+        OPTION_LOCATOR = optionLocator;
+        SELECTED_LOCATOR = selectedLocator;
     }
 
     public boolean selectValue(String value) {
@@ -32,4 +41,5 @@ public class Select extends BaseElement {
     public String getSelectedValue() {
         return element.findElement(SELECTED_LOCATOR).getAttribute("innerText");
     }
+
 }

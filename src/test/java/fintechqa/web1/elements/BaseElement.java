@@ -1,16 +1,20 @@
 package fintechqa.web1.elements;
 
+import fintechqa.web1.actions.ActionHelper;
 import org.openqa.selenium.WebElement;
 
-public class BaseElement {
-    WebElement element;
+public abstract class BaseElement {
 
-    BaseElement(WebElement element) {
+    WebElement element;
+    ActionHelper actionHelper;
+
+    protected BaseElement(WebElement element, ActionHelper actionHelper) {
         this.element = element;
+        this.actionHelper = actionHelper;
     }
 
     public String getText() {
-        return element.getText();
+        return actionHelper.isPresent(element).getText();
     }
 
 }

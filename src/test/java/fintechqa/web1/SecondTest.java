@@ -51,7 +51,7 @@ public class SecondTest extends BaseRunner {
         });
 
         List<String> tabs = new ArrayList<>(driver.getWindowHandles());
-        if(tabs.size() != 2) {
+        if (tabs.size() != 2) {
             throw new IOException("No opened second tab");
         }
         driver.switchTo().window(tabs.get(1));
@@ -65,10 +65,12 @@ public class SecondTest extends BaseRunner {
     }
 
     @Test
-    public void test2() {
+    public void test2() throws IOException {
         driver.get("https://www.tinkoff.ru/mobile-operator/tariffs/");
-        By confirmButtonLocator = By.xpath("//*[contains(@class,'MvnoRegionConfirmation__optionAgreement')]");
         WebDriverWait wait = new WebDriverWait(driver, 10);
+        ElementCreator elementCreator = new ElementCreator(driver);
+
+        By confirmButtonLocator = By.xpath("//*[contains(@class,'MvnoRegionConfirmation__optionAgreement')]");
         wait.until(ExpectedConditions.elementToBeClickable(confirmButtonLocator));
         driver.findElement(confirmButtonLocator).click();
         By selectedRegionLocator = By.xpath("//*[contains(@class, 'MvnoRegionConfirmation__title')]");
@@ -80,11 +82,11 @@ public class SecondTest extends BaseRunner {
         String amountMoscow = driver.findElement(amountTextLocator).getText();
 
         driver.findElement(selectedRegionLocator).click();
-        By cityListLocator =  By.xpath("//*[contains(@class, 'MobileOperatorRegionsPopup__region_')]");
-        wait.until( d -> {
+        By cityListLocator = By.xpath("//*[contains(@class, 'MobileOperatorRegionsPopup__region_')]");
+        wait.until(d -> {
             List<WebElement> cityList = d.findElements(cityListLocator);
             for (WebElement el : cityList) {
-                if (el.getText().equals("Краснодар")){
+                if (el.getText().equals("Краснодар")) {
                     el.click();
                     return true;
                 }
@@ -95,20 +97,23 @@ public class SecondTest extends BaseRunner {
         wait.until(ExpectedConditions.visibilityOfElementLocated(amountTextLocator));
         String amountKrasnodar = driver.findElement(amountTextLocator).getAttribute("innerText");
         assertNotEquals(amountKrasnodar, amountMoscow);
-        ElementCreator elementCreator = new ElementCreator(driver);
 
-        Select internetSelect = elementCreator.create(EnumElements.SELECT,
-                By.xpath("//*[@data-qa-file='UIDropdownSelect' and .//*[@name='internet']]"));
-        Select callsSelect = elementCreator.create(EnumElements.SELECT,
-                By.xpath("//*[@data-qa-file='UIDropdownSelect' and .//*[@name='calls']]"));
+
+        Select internetSelect = elementCreator.create(EnumElements.SELECT, "Интернет");
+        Select callsSelect = elementCreator.create(EnumElements.SELECT, "Звонки");
 
         internetSelect.selectValue("Безлимитный интернет");
         callsSelect.selectValue("Безлимитные минуты");
 
-        System.out.println(driver.findElement(By.xpath("//*[@data-qa-file=\"UICheckbox\"]//input[@type='checkbox']")).isSelected());
 
-       CheckBox checkBox =  elementCreator.create(EnumElements.CHECKBOX,
-               By.xpath("//*[@data-qa-file='UICheckbox']//input[@type='checkbox']"));
+        CheckBox modemCheckBox = elementCreator.create(EnumElements.CHECKBOX, "Режим модема");
+        CheckBox unlimitedSmsCheckBox = elementCreator.create(EnumElements.CHECKBOX, "Безлимитные SMS");
+        if(!modemCheckBox.isSelected()) {
+            modemCheckBox.click();
+        }
+        if(!unlimitedSmsCheckBox.isSelected()) {
+            unlimitedSmsCheckBox.click();
+        }
 
 
         try {
@@ -119,7 +124,7 @@ public class SecondTest extends BaseRunner {
     }
 
     @Test
-    public void test3(){
+    public void test3() {
         driver.get("https://www.tinkoff.ru/mobile-operator/tariffs/");
     }
 }
